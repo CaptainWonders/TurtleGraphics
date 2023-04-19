@@ -6,7 +6,10 @@ const int WIDTH = 20;
 const int HEIGHT = 20;
 //---------------------------
 //(class?) variable-
-int turtleFace = 0;
+int turtleFace = 0; //represents the facing of the turtle
+//represents the location of the turtle in the board
+int turtleX = 0;
+int turtleY = 0;
 //------------------
 
 
@@ -57,10 +60,9 @@ void Rotate(int rotBy) {
         turtleFace = 3;
     }
     //-----------------------------
-    //cout << "turtle facing " << turtleFace << endl; //debug line
 }
 
-void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
+void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen) {
     //supposed to end the while loop when a successful iteration happens
     bool exitCheck = true;
     //holds the distance the user wants to move
@@ -74,8 +76,8 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
         switch (turtleFace) {
         case 0: //east
             //check if the turtle can go that far--------
-            if (WIDTH - ppTurtLOC[0] > distance) {
-                ppTurtLOC[0] += distance;
+            if (WIDTH - turtleX > distance) {
+                turtleX += distance;
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -85,8 +87,8 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
             break;
         case 1: //south
             //check if the turtle can go that far--------
-            if (HEIGHT - ppTurtLOC[1] > distance) {
-                ppTurtLOC[1] += distance;
+            if (HEIGHT - turtleY > distance) {
+                turtleY += distance;
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -96,8 +98,8 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
             break;
         case 2: //west
             //check if the turtle can go that far--------
-            if (ppTurtLOC[0] > distance) {
-                ppTurtLOC[0] -= distance;
+            if (turtleX > distance) {
+                turtleX -= distance;
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -107,8 +109,8 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
             break;
         case 3: //north
             //check if the turtle can go that far--------
-            if (ppTurtLOC[1] > distance) {
-                ppTurtLOC[0] -= distance;
+            if (turtleY > distance) {
+                turtleY -= distance;
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -120,7 +122,7 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
     }
 }
 
-void DisplayBoard(char pArray[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
+void DisplayBoard(char pArray[HEIGHT][WIDTH], bool ppPen) {
     //iterate line by line to print out all the data in the array
     //-----------------------------------
     for (int i = 0; i < HEIGHT; ++i) {
@@ -154,18 +156,16 @@ void DisplayBoard(char pArray[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
     }
     //--------------------------------------
     //print out the turtle location---------------
-    cout << "The turtle is at: " << ppTurtLOC[0] << ' , ' << ppTurtLOC[1] << endl;
-    
+    cout << "The turtle is at: " << turtleX << ',' << turtleY << endl;
     //--------------------------------------------
 }
 
-bool ProcessRouter(int pUserSel, char pBoard[HEIGHT][WIDTH], bool& pPen, int pTurtLOC[2]) {
+bool ProcessRouter(int pUserSel, char pBoard[HEIGHT][WIDTH], bool& pPen) {
     //compare the selection from the user to actions in the switch
-    cout << pTurtLOC[0] << endl;
     switch (pUserSel)
     {
     case 1: //draw board
-        DisplayBoard(pBoard, pPen, pTurtLOC);
+        DisplayBoard(pBoard, pPen);
         return true;
     case 2: //save the board and descriptions to file
         //SaveBoard(pBoard);
@@ -177,7 +177,7 @@ bool ProcessRouter(int pUserSel, char pBoard[HEIGHT][WIDTH], bool& pPen, int pTu
         pPen = !(pPen);
         return true;
     case 5: //move the turtle forward, drawing or not drawing based on the pen
-        MoveForward(pBoard, pPen, pTurtLOC);
+        MoveForward(pBoard, pPen);
         return true;
     case 6: //rotate counterclockwise
         Rotate(-1);
@@ -187,8 +187,8 @@ bool ProcessRouter(int pUserSel, char pBoard[HEIGHT][WIDTH], bool& pPen, int pTu
         return true;
     case 8: //move the turtle to 0,0 and clear the board
         BuildBoard(pBoard);
-        pTurtLOC[0] = 0;
-        pTurtLOC[1] = 0;
+        turtleY = 0;
+        turtleX = 0;
         pPen = 0;
         return true;
     case 9: //end the program
@@ -206,22 +206,20 @@ int main() {
     //Declare variables----------
     bool penTgl = false; //whether the pen is up or down. false is up
     bool keepGoing = true; //whether the process keeps going
-    int turtleLOC[2] = { 0,0 }; //represents the location of the turtle in the board
     char board[HEIGHT][WIDTH]; //board, what else?
     int userSel = 0; //Just initializing which option the user will select
     //---------------------------
 
     //run startup functions--
     BuildBoard(board); //pass in the board so that it can be populated
-    DisplayBoard(board, penTgl, turtleLOC); //pass in the board for display (might be commented out in the end)
-    cout << turtleLOC[0] << endl;
+    DisplayBoard(board, penTgl); //pass in the board for display (might be commented out in the end)
     //-----------------------
   
 
-    //Infinite loop that exits when the user uses 10, I noticed many graphical apps use this method, such as Tkninter for Python
+    //Not quite infinite loop that exits when the user uses 9, I noticed many graphical apps use this method, such as Tkninter for Python
     while (keepGoing) {
         userSel = Options(); //gets the the command the user wants
-        keepGoing = ProcessRouter(userSel, board, penTgl, turtleLOC); //decides which functions to call
+        keepGoing = ProcessRouter(userSel, board, penTgl); //decides which functions to call
     }
 
 

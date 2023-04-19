@@ -9,38 +9,7 @@ const int HEIGHT = 20;
 int turtleFace = 0;
 //------------------
 
-void DisplayBoard(char pArray[HEIGHT][WIDTH], bool ppPen) {
-    //iterate line by line to print out all the data in the array
-    //-----------------------------------
-    for (int i = 0; i < HEIGHT; ++i) {
-        for (int j = 0; j < WIDTH; ++j)
-        {
-            cout << pArray[i][j] << ' ';
-        }
-        cout << "\n";
-    }
-    //------------------------------------
-    //Print out the turtle's facing-------------------
-    if (turtleFace == 0) {
-        cout << "The turtle is facing east" << endl;
-    }
-    else if (turtleFace == 1) {
-        cout << "The turtle is facing south" << endl;
-    }
-    else if (turtleFace == 2) {
-        cout << "The turtle is facing west" << endl;
-    }
-    else {
-        cout << "The turtle is facing north" << endl;
-    }
-    //-------------------------------------------------
-    if (ppPen) {
-        cout << "The pen is down" << endl;
-    }
-    else {
-        cout << "The pen is up" << endl;
-    }
-}
+
 void BuildBoard(char pArray[HEIGHT][WIDTH]) {
     //iterate line by line and fill them with dashes to represent empty space
     //------------------------------------
@@ -115,23 +84,88 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
             //-------------------------------------------
             break;
         case 1: //south
-
+            //check if the turtle can go that far--------
+            if (HEIGHT - ppTurtLOC[1] > distance) {
+                ppTurtLOC[1] += distance;
+                exitCheck = false; //exits the while loop
+            }
+            else {
+                cout << "That is too far given the direction" << endl;
+            }
+            //-------------------------------------------
             break;
         case 2: //west
-
+            //check if the turtle can go that far--------
+            if (ppTurtLOC[0] > distance) {
+                ppTurtLOC[0] -= distance;
+                exitCheck = false; //exits the while loop
+            }
+            else {
+                cout << "That is too far given the direction" << endl;
+            }
+            //-------------------------------------------
             break;
         case 3: //north
-
+            //check if the turtle can go that far--------
+            if (ppTurtLOC[1] > distance) {
+                ppTurtLOC[0] -= distance;
+                exitCheck = false; //exits the while loop
+            }
+            else {
+                cout << "That is too far given the direction" << endl;
+            }
+            //-------------------------------------------
             break;
         }
     }
 }
-bool processRouter(int pUserSel, char pBoard[HEIGHT][WIDTH], bool& pPen, int pTurtLOC[2]) {
+
+void DisplayBoard(char pArray[HEIGHT][WIDTH], bool ppPen, int ppTurtLOC[2]) {
+    //iterate line by line to print out all the data in the array
+    //-----------------------------------
+    for (int i = 0; i < HEIGHT; ++i) {
+        for (int j = 0; j < WIDTH; ++j)
+        {
+            cout << pArray[i][j] << ' ';
+        }
+        cout << "\n";
+    }
+    //------------------------------------
+    //Print out the turtle's facing-------------------
+    if (turtleFace == 0) {
+        cout << "The turtle is facing east" << endl;
+    }
+    else if (turtleFace == 1) {
+        cout << "The turtle is facing south" << endl;
+    }
+    else if (turtleFace == 2) {
+        cout << "The turtle is facing west" << endl;
+    }
+    else {
+        cout << "The turtle is facing north" << endl;
+    }
+    //-------------------------------------------------
+    //Print out the pen state---------------
+    if (ppPen) {
+        cout << "The pen is down" << endl;
+    }
+    else {
+        cout << "The pen is up" << endl;
+    }
+    //--------------------------------------
+    //print out the turtle location---------------
+    cout << "The turtle is at: " << ppTurtLOC[0] << ' , ' << ppTurtLOC[1] << endl;
+    
+    //--------------------------------------------
+}
+
+bool ProcessRouter(int pUserSel, char pBoard[HEIGHT][WIDTH], bool& pPen, int pTurtLOC[2]) {
     //compare the selection from the user to actions in the switch
+    cout << pTurtLOC[0] << endl;
     switch (pUserSel)
     {
     case 1: //draw board
-        DisplayBoard(pBoard, pPen);
+        DisplayBoard(pBoard, pPen, pTurtLOC);
         return true;
     case 2: //save the board and descriptions to file
         //SaveBoard(pBoard);
@@ -179,14 +213,15 @@ int main() {
 
     //run startup functions--
     BuildBoard(board); //pass in the board so that it can be populated
-    DisplayBoard(board, penTgl); //pass in the board for display (might be commented out in the end)
+    DisplayBoard(board, penTgl, turtleLOC); //pass in the board for display (might be commented out in the end)
+    cout << turtleLOC[0] << endl;
     //-----------------------
   
 
     //Infinite loop that exits when the user uses 10, I noticed many graphical apps use this method, such as Tkninter for Python
     while (keepGoing) {
         userSel = Options(); //gets the the command the user wants
-        keepGoing = processRouter(userSel, board, penTgl, turtleLOC); //decides which functions to call
+        keepGoing = ProcessRouter(userSel, board, penTgl, turtleLOC); //decides which functions to call
     }
 
 

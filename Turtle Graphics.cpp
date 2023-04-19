@@ -8,8 +8,8 @@ const int HEIGHT = 20;
 //(class?) variable-
 int turtleFace = 0; //represents the facing of the turtle
 //represents the location of the turtle in the board
-int turtleX = 0;
 int turtleY = 0;
+int turtleX = 0;
 //------------------
 
 
@@ -77,7 +77,12 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen) {
         case 0: //east
             //check if the turtle can go that far--------
             if (WIDTH - turtleX > distance) {
-                turtleX += distance;
+                for (int i = 0; i < distance; i++) {
+                    turtleX++;
+                    if (ppPen) {
+                        ppBoard[turtleX][turtleY] = '*';
+                    }
+                }
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -88,7 +93,12 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen) {
         case 1: //south
             //check if the turtle can go that far--------
             if (HEIGHT - turtleY > distance) {
-                turtleY += distance;
+                for (int i = 0; i < distance; i++) {
+                    turtleY++;
+                    if (ppPen) {
+                        ppBoard[turtleX][turtleY] = '*';
+                    }
+                }
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -99,7 +109,12 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen) {
         case 2: //west
             //check if the turtle can go that far--------
             if (turtleX > distance) {
-                turtleX -= distance;
+                for (int i = 0; i < distance; i++) {
+                    turtleX--;
+                    if (ppPen) {
+                        ppBoard[turtleX][turtleY] = '*';
+                    }
+                }
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -110,7 +125,12 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen) {
         case 3: //north
             //check if the turtle can go that far--------
             if (turtleY > distance) {
-                turtleY -= distance;
+                for (int i = 0; i < distance; i++) {
+                    turtleY--;
+                    if (ppPen) {
+                        ppBoard[turtleX][turtleY] = '*';
+                    }
+                }
                 exitCheck = false; //exits the while loop
             }
             else {
@@ -122,13 +142,13 @@ void MoveForward(char ppBoard[HEIGHT][WIDTH], bool ppPen) {
     }
 }
 
-void DisplayBoard(char pArray[HEIGHT][WIDTH], bool ppPen) {
+void DisplayBoard(char pBoard[HEIGHT][WIDTH], bool ppPen) {
     //iterate line by line to print out all the data in the array
     //-----------------------------------
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j)
         {
-            cout << pArray[i][j] << ' ';
+            cout << pBoard[j][i] << ' ';
         }
         cout << "\n";
     }
